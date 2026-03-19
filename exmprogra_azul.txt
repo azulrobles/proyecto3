@@ -1,5 +1,7 @@
 ﻿EXAMEN_AZULR 
-
+pruebadecommitssssss
+siiiiii
+nooooooooooooo
 
 1. Gene mayor 
 Comando: awk -F "\t" '$3 == "gene" {print $4}' coli.gff | sort -nr | uniq | head 
