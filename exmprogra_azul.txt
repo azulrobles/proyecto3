@@ -1,0 +1,95 @@
+﻿EXAMEN_AZULR 
+
+
+1. Gene mayor 
+Comando: awk -F "\t" '$3 == "gene" {print $4}' coli.gff | sort -nr | uniq | head 
+Respuesta:4640942
+      1.1 Gene menor 
+Comando: awk -F "\t" '$3 == "gene" {print $4}' coli.gff | sort -n | uniq | head 
+Respuesta: 190 
+
+
+2. Mayor distancia entre un gen 
+Comando: awk -F "\t" '$3 == "gene" {print $5 - $4}' coli.gff | sort -nr | head 
+Respuesta: 7019
+
+
+3. Gen repetido por posición inicio 
+Comando: awk -F "\t" '$3 == "gene" {print $4}' coli.gff | sort -n | uniq -c | awk '$1 > 1'
+Respuesta: 
+      2 190
+      2 16751
+      2 2668006
+      2 3438431
+
+
+
+
+      3.1 Gen repetido por posición término 
+Comando: awk -F "\t" '$3 == "gene" {print $5}' coli.gff | sort -n | uniq -c | awk '$1 > 1'
+Respuesta: 2 255
+                    2 4020229
+
+
+4. Cuántos en forward y cuántos en reverse 
+Comando: awk -F "\t" '{print $7}' coli.gff | sort -n | uniq -c  
+Respuesta:   4738 +
+                       4786 -
+
+
+5. Dist. promedia entre inicio y fin 
+Comando: awk '{t = $3 - $2} {s +=t} END {print "Mean: "s/311595}' mirna_human_ensembl_hg38.txt
+Respuesta: Mean: 25.1639
+
+
+6. Cantidad de ‘MR’ 
+Comando: grep 'MR' coli_protein.faa | wc -l
+Respuesta: 1901 
+
+
+7. ‘MR’ al inicio 
+Comando: grep '^MR' coli_protein.faa | wc -l
+Respuesta: 267 
+
+
+8. Reporte de Cromosoma, posición inicio, fin y gene ID 
+Comando: awk -F "\t" '{print $1,$2,$3,$7}' mirna_human_ensembl_hg38.txt | head
+Respuesta: 
+Chromosome/scaffold name Start (bp) End (bp) Ensembl gene ID
+17 38921341 38921364 ENSG00000002834
+12 8943479 8943500 ENSG00000003056
+2 187465861 187465889 ENSG00000003436
+2 37248230 37248253 ENSG00000003509
+3 129555904 129555932 ENSG00000004399
+1 33009078 33009099 ENSG00000004455 
+12 2799216 2799237 ENSG00000004478
+7 96121215 96121237 ENSG00000004864
+7 96121241 96121266 ENSG00000004864
+
+
+9. Intento1 script 
+#!/bin/bash
+archivo=$1
+inicio=$2
+fin=$3
+
+
+awk -F "\t" 'BEGIN {
+    print "Calculando promedio..."
+    suma = 0
+    contador = 0
+    distancia = 0
+
+
+}
+{
+    distancia = $fin - $inicio
+    suma += distancia
+    contador++
+}
+END {
+    promedio = suma / contador
+    print "Total de lineas:", contador
+
+
+}' "$1"
